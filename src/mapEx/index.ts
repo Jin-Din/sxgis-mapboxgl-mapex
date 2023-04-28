@@ -34,80 +34,13 @@ import type {
 import { ref, computed } from "vue";
 import mapboxgl from "./mapbox-gl-tdtsx";
 
-mapboxgl.accessToken = "pk.eyJ1Ijoib25lZ2lzZXIiLCJhIjoiY2plZHptcnVuMW5tazMzcWVteHM2aGFsZiJ9.ERWP7zZ-N6fmNl3cRocJ1g";
+// mapboxgl.accessToken = "pk.eyJ1Ijoib25lZ2lzZXIiLCJhIjoiY2plZHptcnVuMW5tazMzcWVteHM2aGFsZiJ9.ERWP7zZ-N6fmNl3cRocJ1g";
 
 import defaultMapConfig from "./defaultMapConfig"; //默认配置
 import { setTokens, getInnerBasemapItem, getInnerVectorBasemapItem, getInnerRasterBasemapItem } from "./defaultBaseMap";
+import { AnyBasemapStyle, ISBaseMap, ISLayer, ISMapConfig, ISRasterBaseMap, ISVectorTileBaseMap } from "./types";
 
 export default mapboxgl;
-
-// #region mapEx接口
-export type ISBaseMapType = "vector" | "raster";
-
-// export type ISBaseMapRasterName = "TDTSX_VECTOR" | "TDTSX_IMAGE" | "TDTSX_IMAGE_LABEL";
-
-export type VectorBaseMapStyle = "default" | "blue" | "black" | "gray"; //天地图陕西矢量地图风格
-export type RasterBasemapStyle = "tianditu_img_c" | "tianditu_img_c_group" | "tianditu_vec_c_group";
-export type AnyBasemapStyle = VectorBaseMapStyle | RasterBasemapStyle;
-export type tokenType = "tdtsxVector" | "tdt" | "tdtsx_img" | "tdtsx_img_anno"; //地图token 管理
-
-export interface ISToken extends Partial<Record<tokenType, string | undefined>> {}
-
-export interface ISMapView {
-  center: [number, number];
-  zoom: number; // 默认级别
-  pitch?: number; // 视角倾斜角度
-  maxPitch?: number;
-  minPitch?: number;
-  minZoom?: number;
-  maxZoom?: number;
-  dragRotate?: boolean;
-}
-export interface ISMapViewFullExtent {
-  extent: LngLatBoundsLike;
-  pitch: number; // 视角倾斜角度
-}
-export interface ISMapConfig {
-  view?: ISMapView;
-  current: string;
-  fullExtent?: ISMapViewFullExtent;
-  token?: ISToken; //Partial<Record<tokenType, string>>;
-  baseMaps: (ISBaseMap | string)[];
-}
-
-export interface ISLayer extends Layer {
-  id: any;
-  layout: any;
-  name?: string;
-}
-export interface ISBaseMap {
-  id: string;
-  name?: string;
-  icon?: string;
-  type: ISBaseMapType;
-  style?: string | Style;
-}
-export interface ISVectorTileBaseMap extends ISBaseMap {
-  type: "vector";
-  style?: string;
-}
-export interface ISRasterBaseMap extends ISBaseMap {
-  type: "raster";
-  // sources: Sources;
-  style?: Style;
-  // baseLayers: ISLayer[];
-  subLayers?: ISLayer[];
-  // terrain?: TerrainSpecification | undefined;
-}
-/**
- * 鼠标样式
- */
-export interface ISMapCursorOption {
-  url: string;
-  offset?: [number, number];
-}
-
-// #endregion
 
 // #region 自定义内容
 
@@ -745,8 +678,8 @@ const fetchJson = async (url: string) => {
 let _mapConfig: Partial<ISMapConfig> = {
   current: "default",
   token: {
-    tdtsxVector: "abc",
-    tdt: "48ad25d128061c24f00559d481310004",
+    default: "abc",
+    tianditu: "48ad25d128061c24f00559d481310004",
   },
   baseMaps: ["default", "blue"],
 };

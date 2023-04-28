@@ -1,3 +1,5 @@
+import { ISMapConfig } from "./types";
+
 export default {
   view: {
     center: [108.653, 35.2],
@@ -8,8 +10,8 @@ export default {
   },
   current: "black",
   token: {
-    tdtsxVector: "KLSZfloFZoYooU*g",
-    tdt: "48ad25d128061c24f00559d481310004",
+    default: "KLSZfloFZoYooU*g",
+    tianditu: "48ad25d128061c24f00559d481310004",
   },
   baseMaps: ["default", "blue", "black"],
-};
+} as ISMapConfig;

@@ -8,10 +8,10 @@ import {
   RasterBasemapStyle,
   tokenType,
   VectorBaseMapStyle,
-} from "./index";
+} from "./types";
 
 import { ref, computed } from "vue";
-const _token = ref<ISToken>({ tdtsxVector: "", tdt: "", tdtsx_img: "", tdtsx_img_anno: "" });
+const _token = ref<ISToken>({ default: "", tianditu: "", sx_img: "", sx_img_label: "" });
 
 /**
  * 内置天地图陕西默认的地图集
@@ -19,23 +19,28 @@ const _token = ref<ISToken>({ tdtsxVector: "", tdt: "", tdtsx_img: "", tdtsx_img
 const defaultBaseMapVectorStyles = computed(() => {
   return {
     //默认
-    default: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.tdtsxVector}/VectorTileServer/styles/default.json`,
+    default: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.default}/VectorTileServer/styles/default.json`,
     //黑色/夜光
-    black: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.tdtsxVector}/VectorTileServer/styles/black.json`,
+    black: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.default}/VectorTileServer/styles/black.json`,
     //科技蓝
-    blue: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.tdtsxVector}/VectorTileServer/styles/blue.json`,
+    blue: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.default}/VectorTileServer/styles/blue.json`,
     //灰白
-    gray: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.tdtsxVector}/VectorTileServer/styles/blue.json`,
+    gray: `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_token.value.default}/VectorTileServer/styles/blue.json`,
   };
 });
 
 const defaultBasemapRasterStyle = computed(() => {
-  let { tdt } = _token.value;
+  let { tianditu, sx_img, sx_img_label } = _token.value;
   return {
-    tianditu_img_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=img_c&x={x}&y={y}&l={z}&tk=${tdt}`),
-    tianditu_cia_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=cia_c&x={x}&y={y}&l={z}&tk=${tdt}`),
-    tianditu_vec_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=vec_c&x={x}&y={y}&l={z}&tk=${tdt}`),
-    tianditu_cva_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=cva_c&x={x}&y={y}&l={z}&tk=${tdt}`),
+    tianditu_img_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=img_c&x={x}&y={y}&l={z}&tk=${tianditu}`),
+    tianditu_cia_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=cia_c&x={x}&y={y}&l={z}&tk=${tianditu}`),
+    tianditu_vec_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=vec_c&x={x}&y={y}&l={z}&tk=${tianditu}`),
+    tianditu_cva_c: [0, 1, 2, 3, 4, 5, 6, 7].map((index) => `https://t${index}.tianditu.gov.cn/DataServer?T=cva_c&x={x}&y={y}&l={z}&tk=${tianditu}`),
+    //以下为天地图陕西的瓦片地图
+    tianditu_sx_img: [`https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/SxImgMap/${sx_img}/TileServer/tile/{z}/{y}/{x}`],
+    tianditu_sx_img_label: [
+      `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/SxImgLabelMap/${sx_img_label}/TileServer/tile/{z}/{y}/{x}`,
+    ],
   };
 });
 
@@ -49,7 +54,7 @@ const _defaultBaseMapItems = computed(() => {
       id: "default",
       name: "浅色",
       type: "vector" as ISBaseMapType,
-      style: defaultBaseMapVectorStyles.value["default"], // `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_mapConfig.token?.tdtsxVector}/VectorTileServer/styles/default.json`,
+      style: defaultBaseMapVectorStyles.value["default"], // `https://shaanxi.tianditu.gov.cn/ServiceSystem/Tile/rest/service/sxww2022Geo/${_mapConfig.token?.default}/VectorTileServer/styles/default.json`,
     } as ISVectorTileBaseMap,
     //黑色/夜光
     black: {
@@ -178,6 +183,107 @@ const _defaultBaseMapItems = computed(() => {
             id: "tianditu_cva_c_layer",
             type: "raster",
             source: "tianditu_cva_c_source",
+            metadata: {
+              isBaseMap: true,
+            },
+            layout: {
+              visibility: "visible",
+            },
+          },
+        ],
+        version: 8,
+      },
+      subLayers: [],
+    } as ISRasterBaseMap,
+    //天地图·陕西 影像
+    tianditu_sx_img: {
+      id: "tianditu_sx_img",
+      type: "raster" as ISBaseMapType,
+      style: {
+        sources: {
+          tianditu_sx_img_source: {
+            type: "raster",
+            tiles: defaultBasemapRasterStyle.value["tianditu_sx_img"],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: "tianditu_sx_img_layer",
+            type: "raster",
+            source: "tianditu_sx_img_source",
+            metadata: {
+              isBaseMap: true,
+            },
+            layout: {
+              visibility: "visible",
+            },
+          },
+        ],
+        version: 8,
+      },
+    } as ISRasterBaseMap,
+    //天地图·陕西 影像注记
+    tianditu_sx_img_label: {
+      id: "tianditu_sx_img_label",
+      type: "raster" as ISBaseMapType,
+      style: {
+        sources: {
+          tianditu_sx_img_label_source: {
+            type: "raster",
+            tiles: defaultBasemapRasterStyle.value["tianditu_sx_img_label"],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: "tianditu_sx_img_label_layer",
+            type: "raster",
+            source: "tianditu_sx_img_label_source",
+            metadata: {
+              isBaseMap: true,
+            },
+            layout: {
+              visibility: "visible",
+            },
+          },
+        ],
+        version: 8,
+      },
+    } as ISRasterBaseMap,
+    // 天地图·陕西 影像组
+    tianditu_sx_img_group: {
+      id: "tianditu_sx_img_group",
+      type: "raster" as ISBaseMapType,
+      style: {
+        sources: {
+          tianditu_sx_img_source: {
+            type: "raster",
+            tiles: defaultBasemapRasterStyle.value["tianditu_sx_img"],
+            tileSize: 256,
+          },
+          tianditu_sx_img_label_source: {
+            type: "raster",
+            tiles: defaultBasemapRasterStyle.value["tianditu_sx_img_label"],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: "tianditu_sx_img_layer",
+            type: "raster",
+            source: "tianditu_sx_img_source",
+            metadata: {
+              isBaseMap: true,
+            },
+            layout: {
+              visibility: "visible",
+            },
+          },
+          {
+            id: "tianditu_sx_img_label_layer",
+            type: "raster",
+            source: "tianditu_sx_img_label_source",
             metadata: {
               isBaseMap: true,
             },
