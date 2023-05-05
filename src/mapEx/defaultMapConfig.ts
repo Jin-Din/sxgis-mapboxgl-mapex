@@ -1,4 +1,4 @@
-import { ISMapConfig } from "./types";
+import { ISMapConfig } from "./";
 
 export default {
   view: {

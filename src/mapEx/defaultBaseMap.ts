@@ -8,7 +8,7 @@ import {
   RasterBasemapStyle,
   tokenType,
   VectorBaseMapStyle,
-} from "./types";
+} from "./";
 
 import { ref, computed } from "vue";
 const _token = ref<ISToken>({ default: "", tianditu: "", sx_img: "", sx_img_label: "" });
