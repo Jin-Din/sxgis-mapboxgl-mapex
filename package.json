@@ -1,6 +1,6 @@
 {
   "name": "@jindin/sxgis-mapex",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "mapboxgl地图增强对象(适用于天地图陕西的mapbox-gl api)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
