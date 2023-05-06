@@ -210,39 +210,46 @@ export class Map extends mapboxgl.Map {
   /**
    * 重写 addLayer，对新加入的图层强制加入 {metadata:{isBaseMap:boolean}} 扩展属性，默认加入 {metadata:{isBaseMap:false}}
    * @param layer
-   * @param before
+   * @param before 插入到此图层id之前。
+   *
+   * 特别说明：当传入的参数为boolean并且为true时，将干预新加入图层的顺序。
+   *
+   *
+   * 便于图层的分组管理，本程序设计了一种默认的地图分组规则。地图map对象在初始化后会默认生成三个分别是点、线、面的分组，点层最上，面层最下。
+   * 当有新图层加入时，如果传入的参数为boolean且未true，将使用默认分组规则干预新图层的顺序，使得点层永远在上，面层永远处于点、线层之下：
+   * 反之，按正常的顺序添加图层，不干预；
    * @returns
    */
-  addLayer(layer: AnyLayer, before?: string | undefined): this {
+  addLayer(layer: AnyLayer, before?: string | boolean | undefined): this {
     let { metadata } = defaultOptionEx;
     let nLayer = {
       metadata,
       ...layer,
     };
+
     //根据layer 类型判断，分别加入到指定的点、线、面 组内
-    let beforeId = undefined;
-    switch (layer.type) {
-      case "circle":
-      case "symbol":
-        beforeId = point_group_layer;
-        break;
-      case "line":
-        beforeId = line_group_layer;
-        break;
-      case "fill":
-      case "raster":
-        beforeId = fill_group_layer;
-        break;
-      default:
-        break;
-    }
-
-    return super.addLayer(nLayer, before ?? beforeId);
-    // return super.addLayer(nLayer, before);
+    let beforeId: string | undefined = undefined;
+    if (typeof before === "boolean")
+      if (before)
+        switch (layer.type) {
+          case "circle":
+          case "symbol":
+            beforeId = point_group_layer;
+            break;
+          case "line":
+            beforeId = line_group_layer;
+            break;
+          case "fill":
+          case "raster":
+            beforeId = fill_group_layer;
+            break;
+          default:
+            break;
+        }
+      else beforeId = undefined;
+    else beforeId = before;
+    return super.addLayer(nLayer, beforeId);
   }
-
-  addLayerEx(layer: AnyLayer, bOrder: boolean = true) {}
-
   refreshBaseLayers(): void {
     //TODO 对底图进行检查，并标记为底图 isBaseMap =true ,采取的办法是取到原来的图层，保存并检查加入配置，然后删除原图层，再次加入。 效率有待提高
 
