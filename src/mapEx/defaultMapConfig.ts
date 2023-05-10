@@ -10,8 +10,8 @@ export default {
   },
   current: "black",
   token: {
-    default: "KLSZfloFZoYooU*g",
-    tianditu: "48ad25d128061c24f00559d481310004",
+    default: "",
+    tianditu: "",
   },
   baseMaps: ["default", "blue", "black"],
 } as ISMapConfig;
