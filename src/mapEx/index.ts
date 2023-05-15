@@ -887,7 +887,11 @@ const parseRasterBasemapToStyle = (basemap: ISRasterBaseMap): Style | undefined 
   //设定默认值
   subLayers = subLayers ?? ([] as ISLayer[]);
   let { layers } = style!;
-  style!.layers = [...layers, ...subLayers] as AnyLayer[]; // 图层合并
+  //图层合并,去重，
+  style!.layers = [...layers, ...subLayers].reduce((prev, item) => {
+    prev.some((v) => v.id === item.id) || prev.push(item as ISLayer);
+    return prev;
+  }, [] as ISLayer[]) as AnyLayer[];
   return {
     ...style,
     version: 8,
@@ -910,20 +914,6 @@ const normalizeMapConfig = (mapConfig: ISMapConfig): ISMapConfig => {
         // 只有名字，则默认他是使用了内置地图
         return getInnerBasemapItem(basemap as string);
       } else {
-        // let vrBasemap = basemap as ISBaseMap;
-        // if (vrBasemap.type === "vector") {
-        //   let vectorBaseMap = vrBasemap as ISVectorTileBaseMap;
-        //   //判断 style 是否有值,梅有值则使用id进行处理
-        //   let style = parseVectorBasemapToStyle(vectorBaseMap); //vectorBaseMap.style ? _getBasemapVectorStyle(vectorBaseMap.style) : _getBasemapVectorStyle(vectorBaseMap.id);
-        //   return {
-        //     ...vectorBaseMap,
-        //     style,
-        //   };
-        // } else if (vrBasemap.type === "raster") {
-        //   let rasterBaseMap = vrBasemap as ISRasterBaseMap;
-        //   return rasterBaseMap;
-        // } else return basemap;
-
         return {
           ...basemap,
           style: parseBasemItemToStyle(basemap as ISBaseMap),
@@ -950,20 +940,6 @@ const resolveMapConfig = (mapConfig: ISMapConfig): ISMapConfig => {
         // 只有名字，则默认他是使用了内置地图
         return getInnerBasemapItem(basemap as string);
       } else {
-        // let vrBasemap = basemap as ISBaseMap;
-        // if (vrBasemap.type === "vector") {
-        //   let vectorBaseMap = vrBasemap as ISVectorTileBaseMap;
-        //   //判断 style 是否有值,梅有值则使用id进行处理
-        //   let style = parseVectorBasemapToStyle(vectorBaseMap); //vectorBaseMap.style ? _getBasemapVectorStyle(vectorBaseMap.style) : _getBasemapVectorStyle(vectorBaseMap.id);
-        //   return {
-        //     ...vectorBaseMap,
-        //     style,
-        //   };
-        // } else if (vrBasemap.type === "raster") {
-        //   let rasterBaseMap = vrBasemap as ISRasterBaseMap;
-        //   return rasterBaseMap;
-        // } else return basemap;
-
         return {
           ...basemap,
           style: parseBasemItemToStyle(basemap as ISBaseMap),

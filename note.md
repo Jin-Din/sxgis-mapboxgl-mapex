@@ -1,3 +1,23 @@
+## 创建初始化
+
+```
+npm init -y // -y 代表默认配置
+```
+
+## 支持 typescript
+
+### 全局安装
+
+```
+$ npm i typescript -g
+```
+
+### 创建 tsconfig.json
+
+```
+npx tsc --init
+```
+
 ## 一些常用命令
 
 ### 5、添加用户
