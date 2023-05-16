@@ -32,7 +32,7 @@ import type {
   LngLatBoundsLike,
 } from "mapbox-gl";
 import { ref, computed } from "vue";
-import mapboxgl from "./mapbox-gl-tdtsx";
+import mapboxgl from "./sxgis-mapboxgl";
 
 // mapboxgl.accessToken = "pk.eyJ1Ijoib25lZ2lzZXIiLCJhIjoiY2plZHptcnVuMW5tazMzcWVteHM2aGFsZiJ9.ERWP7zZ-N6fmNl3cRocJ1g";
 
