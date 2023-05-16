@@ -77,6 +77,9 @@ npm install sxgis-mapboxgl-mapex
 ```
 import { Map, createMap, ISMapConfig } from "sxgis-mapboxgl-mapex";
 
+const { mapboxgl } = window;
+mapboxgl.accessToken = "申请token";
+
 //使用createMap初始化map对象
 const map = createMap(mapid,mapconfig,basemapId);
 map.on("load",()=>{
