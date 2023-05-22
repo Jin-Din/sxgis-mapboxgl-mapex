@@ -20,6 +20,14 @@ npx tsc --init
 
 ## 一些常用命令
 
+### git
+
+#### 上传到 github
+
+```
+git push origin master
+```
+
 ### 5、添加用户
 
 指令：npm adduser

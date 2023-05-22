@@ -1,5 +1,9 @@
 ## mapboxgl 地图扩展(适用于天地图陕西的 mapbox-gl api)
 
+## 技术栈
+
+- vue3+typescript
+
 ## 引入地图开发包
 
 ### 1、地图开发包资源
