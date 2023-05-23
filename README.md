@@ -20,7 +20,7 @@
 
 #### 方法一:在线引用
 
-打开 index.html， 文件内直接引入以上提供的 js、css 地址
+打开 index.html， 文件内直接引入以上提供的 js、css 地址。参见[陕西省地理信息公共服务平台开发帮助](https://shaanxi.tianditu.gov.cn/portal/?#/devDocument)
 
 ```html
 <!DOCTYPE html>
@@ -78,17 +78,17 @@ const map = new mapboxgl.Map(option);
 npm install sxgis-mapboxgl-mapex
 ```
 
-```
+```javascript
 import { Map, createMap, ISMapConfig } from "sxgis-mapboxgl-mapex";
 
 const { mapboxgl } = window;
 mapboxgl.accessToken = "申请token";
 
 //使用createMap初始化map对象
-const map = createMap(mapid,mapconfig,basemapId);
-map.on("load",()=>{
+const map = createMap(mapid, mapconfig, basemapId);
+map.on("load", () => {
   //do something
-})
+});
 ```
 
 > 注意：要调用 createMap 方法来初始化 Map 对象！！！！
@@ -99,7 +99,7 @@ map.on("load",()=>{
 
 map 对象将底图和非底图进行分组。初始化 map 对象时，内部默认加入一个空图层进行标识分组，划分底图区域和非底图区域。同时，重新 addLayer 方法，对每个新加入的图层默认并强制加入 metadata 属性，用于标识图层的类型；
 
-```
+```javascript
 // layer
 {
   ...,
@@ -115,7 +115,7 @@ map 对象将底图和非底图进行分组。初始化 map 对象时，内部�
 - 1. 新加入图层强制加入{metadata:{isBaseMap:boolean}} 扩展属性，默认加入 {metadata:{isBaseMap:false}}
 - 2. 图层分组。划分不同类型的图层区域--点、线、面，点层最上，线层中间，面层最下。通过传入参数来启动是否使用图层分组功能。
 
-```
+```javascript
  /**
      * 重写 addLayer，对新加入的图层强制加入 {metadata:{isBaseMap:boolean}} 扩展属性，默认加入 {metadata:{isBaseMap:false}}
      * @param layer
@@ -134,94 +134,94 @@ map 对象将底图和非底图进行分组。初始化 map 对象时，内部�
 
 > map 对象扩展的内容参见接口
 
-```
+```typescript
 export declare class Map extends mapboxgl.Map {
-    constructor(options?: MapboxOptions);
-    /**
-     * 初始化一些默认的空图层
-     * @returns
-     */
-    initDefaultEmptyLayers(): void;
-    /**
-     * 判断指定图层id的图层是否存在
-     * @param id
-     * @returns true or false
-     */
-    isLayer(id: string): boolean;
-    /**
-     * 重写 addLayer，对新加入的图层强制加入 {metadata:{isBaseMap:boolean}} 扩展属性，默认加入 {metadata:{isBaseMap:false}}
-     * @param layer
-     * @param before 插入到此图层id之前。
-     *
-     * 特别说明：当传入的参数为boolean并且为true时，将干预新加入图层的顺序。
-     *
-     *
-     * 便于图层的分组管理，本程序设计了一种默认的地图分组规则。地图map对象在初始化后会默认生成三个分别是点、线、面的分组，点层最上，面层最下。
-     * 当有新图层加入时，如果传入的参数为boolean且未true，将使用默认分组规则干预新图层的顺序，使得点层永远在上，面层永远处于点、线层之下：
-     * 反之，按正常的顺序添加图层，不干预；
-     * @returns
-     */
-    addLayer(layer: AnyLayer, before?: string | boolean | undefined): this;
-    refreshBaseLayers(): void;
-    /**
-     * [自定义方法]清空除了底图、分割图层等内置图层之外的所有临时（专题）图层
-     */
-    removeOtherLayers(): void;
+  constructor(options?: MapboxOptions);
+  /**
+   * 初始化一些默认的空图层
+   * @returns
+   */
+  initDefaultEmptyLayers(): void;
+  /**
+   * 判断指定图层id的图层是否存在
+   * @param id
+   * @returns true or false
+   */
+  isLayer(id: string): boolean;
+  /**
+   * 重写 addLayer，对新加入的图层强制加入 {metadata:{isBaseMap:boolean}} 扩展属性，默认加入 {metadata:{isBaseMap:false}}
+   * @param layer
+   * @param before 插入到此图层id之前。
+   *
+   * 特别说明：当传入的参数为boolean并且为true时，将干预新加入图层的顺序。
+   *
+   *
+   * 便于图层的分组管理，本程序设计了一种默认的地图分组规则。地图map对象在初始化后会默认生成三个分别是点、线、面的分组，点层最上，面层最下。
+   * 当有新图层加入时，如果传入的参数为boolean且未true，将使用默认分组规则干预新图层的顺序，使得点层永远在上，面层永远处于点、线层之下：
+   * 反之，按正常的顺序添加图层，不干预；
+   * @returns
+   */
+  addLayer(layer: AnyLayer, before?: string | boolean | undefined): this;
+  refreshBaseLayers(): void;
+  /**
+   * [自定义方法]清空除了底图、分割图层等内置图层之外的所有临时（专题）图层
+   */
+  removeOtherLayers(): void;
 
-    /**
-     * 切换底图
-     * @param baseMapItem 传入底图item，可以是内置地图的id（如default，black，blue，gray），也可以是自定义的ISBaseMap对象。
-     */
-    changeBaseMap: (baseMapItem: AnyBasemapStyle | ISBaseMap) => void;
+  /**
+   * 切换底图
+   * @param baseMapItem 传入底图item，可以是内置地图的id（如default，black，blue，gray），也可以是自定义的ISBaseMap对象。
+   */
+  changeBaseMap: (baseMapItem: AnyBasemapStyle | ISBaseMap) => void;
 
-    /**
-     * [自定义方法]查找第一个非底图的图层。内置的 BASEMAP_SPLITED_LAYER 图层
-     *
-     * {layer:{meta:{isBaseMap:false}}}
-     */
-    getFirstBaseMapSplitedLayerId: () => [string, number];
-    /**
-     * [自定义方法]查找并获取紧挨着当前图层的上一个图层id，
-     *
-     * 如果是空，则表示当前图层不在map图层内，或者已经是第一个图层。
-     * @param layerId 当前图层id
-     */
-    getLayerIdBefore: (layerId: string) => string | undefined;
-    /**
-     * [自定义方法]查找并获取紧挨着当前图层的下一个图层id，
-     *
-     * 如果是空，则表示当前图层不在map图层内，或者已经是最后一个图层。
-     * @param layerId 当前图层id
-     */
-    getLayerIdAfter: (layerId: string) => string | undefined;
-    /**
-     * [自定义方法]添加一个空图层，仅用做占位。空图层为 background 类型，
-     * @param layerId
-     * @returns
-     */
-    addEmptyLayer: (layerId: string, beforeId?: string | undefined) => AnyLayer | null;
+  /**
+   * [自定义方法]查找第一个非底图的图层。内置的 BASEMAP_SPLITED_LAYER 图层
+   *
+   * {layer:{meta:{isBaseMap:false}}}
+   */
+  getFirstBaseMapSplitedLayerId: () => [string, number];
+  /**
+   * [自定义方法]查找并获取紧挨着当前图层的上一个图层id，
+   *
+   * 如果是空，则表示当前图层不在map图层内，或者已经是第一个图层。
+   * @param layerId 当前图层id
+   */
+  getLayerIdBefore: (layerId: string) => string | undefined;
+  /**
+   * [自定义方法]查找并获取紧挨着当前图层的下一个图层id，
+   *
+   * 如果是空，则表示当前图层不在map图层内，或者已经是最后一个图层。
+   * @param layerId 当前图层id
+   */
+  getLayerIdAfter: (layerId: string) => string | undefined;
+  /**
+   * [自定义方法]添加一个空图层，仅用做占位。空图层为 background 类型，
+   * @param layerId
+   * @returns
+   */
+  addEmptyLayer: (layerId: string, beforeId?: string | undefined) => AnyLayer | null;
 
-    /**
-     *   加载雪碧图
-     *   Jin 2023.1.6
-     *   */
-    addSpriteImages: (spritePath: string) => Promise<void>;
-    /**
-     * [自定义扩展] 扩展 addSource方法，加入判断，简化addsource之前的 this.getSource(id) 是否存在的判断
-     * @param id
-     * @param source
-     * @param bOverwrite 是否覆盖，如果是，将移除已存在的，再添加。反之，同名的source不做处理
-     * @returns
-     */
-    addSourceEx: (id: string, source: AnySourceData, bOverwrite?: boolean) => this;
-    /**
-     * 设置自定义鼠标样式。 如果是自定义鼠标样式，名称要避开内置默认的鼠标样式名称
-     * 建议使用大小为32x32 的png
-     *
-     * 不支持带别名的路径 如 @assets/image/curor.png
-     * @param cursor 鼠标地址。可以用默认的鼠标样式名称
-     */
-    setMapCursor: (cursor: string, offset?: [number, number]) => void;
+  /**
+   *   加载雪碧图
+   *   Jin 2023.1.6
+   *   */
+  addSpriteImages: (spritePath: string) => Promise<void>;
+  /**
+   * [自定义扩展] 扩展 addSource方法，加入判断，简化addsource之前的 this.getSource(id) 是否存在的判断
+   * @param id
+   * @param source
+   * @param bOverwrite 是否覆盖，如果是，将移除已存在的，再添加。反之，同名的source不做处理
+   * @returns
+   */
+  addSourceEx: (id: string, source: AnySourceData, bOverwrite?: boolean) => this;
+  /**
+   * 设置自定义鼠标样式。 如果是自定义鼠标样式，名称要避开内置默认的鼠标样式名称
+   * 建议使用大小为32x32 的png
+   *
+   * 不支持带别名的路径 如 @assets/image/curor.png
+   * @param cursor 鼠标地址。可以用默认的鼠标样式名称
+   */
+  setMapCursor: (cursor: string, offset?: [number, number]) => void;
 }
 ```
 
@@ -248,7 +248,7 @@ export declare class Map extends mapboxgl.Map {
 
 ### 关于 token
 
-```
+```javascript
 {
   default: "", //天地图陕西矢量瓦片服务的token，也可适用于蓝色（blue）、暗黑版（black）、灰色版（gray）等矢量瓦片服务
   tianditu: "", // 天地图 地图服务的token
@@ -261,7 +261,7 @@ export declare class Map extends mapboxgl.Map {
 
 ### 简单的配置
 
-```
+```json
 {
   view: {
     center: [108.653, 35.2],

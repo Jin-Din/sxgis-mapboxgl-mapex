@@ -1,6 +1,6 @@
 {
   "name": "sxgis-mapboxgl-mapex",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "mapboxgl地图扩展(适用于天地图陕西的mapbox-gl api)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

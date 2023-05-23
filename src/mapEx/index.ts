@@ -801,6 +801,7 @@ export function createMap(mapid: string, mapConfig?: ISMapConfig, basemapId?: st
     bCreateMap = true;
     currentBaseMapId.value = current!;
     return _createMap({
+      ..._mapConfig,
       container: mapid,
       ...view,
       style,
